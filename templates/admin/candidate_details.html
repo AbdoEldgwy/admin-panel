@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Candidate Details</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!-- ✅ Top Navbar -->
+  <div class="top-navbar">
+    <img src="{% static 'images/base color-wide.svg' %}" class="top-logo" alt="Logo">
+  </div>
+
+  <!-- ✅ Layout -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar-links">
+        <li><a href="{% url 'AdminDashboard:admin_dashboard' %}">Dashboard (Home)</a></li>
+        <li><a href="#">Interview Scheduling</a></li>
+        <li><a href="#">Evaluation Insights</a></li>
+        <li class="sidebar-section">Other Information</li>
+        <li><a href="{% url 'Questions:questions' %}">Questions Feed</a></li>
+        <li><a href="{% url 'AdminDashboard:candidate' %}">Candidates Info</a></li>
+        <li><a href="#">Help</a></li>
+        <li class="sidebar-section">Settings</li>
+        <li><a href="#">Personal Settings</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content candidate-details-layout">
+      <!-- Left Info Panel -->
+      <div class="candidate-profile-box">
+        <img src="{{candidate.image.url}}" class="candidate-photo" alt="User Photo">
+        <h3>{{ candidate.name }}</h3>
+        <p class="score">{{ candidate.evaluation_point }}/10<br><span>Score</span></p>
+
+        <label for="eval">Select Evaluation:</label>
+        <select id="eval">
+          <option>Evaluation (2024-05-20)</option>
+        </select>
+
+        <div class="profile-info">
+          <p><strong>Last Interview Duration:</strong> N/A</p>
+          <p><strong>Detailed Feedback:</strong><br>Solid performance, could improve on specific technical areas but has great potential.</p>
+        </div>
+
+        <div class="job-details">
+          <p><strong>Field:</strong> {{ candidate.fields }}</p>
+          <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+          <p><strong>Email:</strong> {{ candidate.mail }}</p>
+        </div>
+
+        <button class="edit-btn">Edit Contact</button>
+      </div>
+
+      <!-- Right Side Content -->
+      <div class="candidate-details-content">
+        <!-- Tab bar -->
+        <div class="tab-bar">
+          <a class="tab active" href="#">Candidate Details</a>
+          <a class="tab" href="#">Interview Evaluation</a>
+          <a class="tab" href="#">Chat History</a>
+        </div>
+
+        <!-- Basic Info Box -->
+        <div class="info-box">
+          <h4>Basic Information</h4>
+          <div class="info-grid">
+            <p><strong>Email:</strong> {{candidate.name }}</p>
+            <p><strong>Phone:</strong> {{candidate.phone }}</p>
+            <p><strong>Field:</strong> {{candidate.fields }}</p>
+            <p><strong>Current Status:</strong> <span class="status-badge">{{candidate.status}}</span></p>
+          </div>
+        </div>
+
+        <!-- Resume Box -->
+        <div class="cv-box">
+            <h3>Resume</h3>
+            {% if candidate.cv %}
+                <div class="cv-file">
+                <a href="{{ candidate.cv.url }}" target="_blank">{{ candidate.cv.name|cut:"cv/" }}</a>
+                </div>
+            {% else %}
+                <p class="no-cv">No CV available.</p>
+            {% endif %}
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

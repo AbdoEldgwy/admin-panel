@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Meet Match</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .left-side {
+        flex: 0.41;
+        background-image: url("{% static 'images/chair.png' %}");
+    }
+    .right-side {
+      flex: 0.65;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      padding: 60px;
+    }
+
+    .register-form {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .register-form h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #777;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .register-form label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .register-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .register-form button {
+      width: 100%;
+      background-color: #207d57;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      margin-top: 25px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Side -->
+    <div class="left-side">
+      <img src="{% static 'images/Secodry color-wiide.svg' %}" alt="Meet Match Logo" class="logo">
+      <h1><strong>Access your HR Interview</strong><br>
+      <span class="highlight">Control Center. BY AI <br> POWER</span></h1>
+    </div>
+
+    <!-- Right Side -->
+    <div class="right-side">
+      <div class="top-text">
+        <p>I have an account? <a href="{% url 'accounts:login' %}" class="get-started">Login</a></p>
+      </div>
+      <form method="POST" class="register-form">
+        {% csrf_token %}
+        <h2>Welcome Again!</h2>
+        <p class="subtitle">Sign in and start managing your wealth account.</p>
+
+        <label for="full_name">Full Name</label>
+        <input type="text" placeholder="Ahmed Ali" name="full_name" required>
+
+        <label for="email">Email address</label>
+        <input type="email" placeholder="example@gmail.com" name="email" required>
+
+        <label for="phone">Phone Number</label>
+        <input type="text" placeholder="01234567890" name="phone" required>
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="********" name="password" required>
+
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" placeholder="********" name="confirm_password" required>
+
+        <button type="submit">Create</button>
+        {% if form.errors %}
+        <div class="error-msg" style="color: red; margin-bottom: 10px;">
+            {% for field in form %}
+            {% for error in field.errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+      </form>
+    </div>
+  </div>
+</body>
+</html>

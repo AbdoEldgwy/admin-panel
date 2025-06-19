@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Match</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+        <img src="{% static 'images\logo.jpg' %}" alt="Meet Match Logo" class="logo-img">
+    </div>
+    <ul class="nav-links">
+        <li><a href="#">Features</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Jobs</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="nav-buttons">
+        <a href="{% url 'accounts:register' %}" class="signup">Sign Up</a>
+        <a href="{% url 'accounts:login' %}" class="login">Login</a>
+    </div>
+  </nav>
+{% block body %}
+
+{% endblock body %}
+
+<footer class="footer">
+<div class="footer-container">
+  <div class="footer-column">
+    <h3 class="footer-logo">Meet Match</h3>
+    <p>Your smart AI-powered interview assistant. Helping companies hire better, faster.</p>
+  </div>
+  <div class="footer-column">
+    <h4>Navigation</h4>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Features</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-column">
+    <h4>Legal</h4>
+    <ul>
+      <li><a href="#">Terms of Service</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Support</a></li>
+    </ul>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>&copy; 2025 Meet Match. All rights reserved.</p>
+</div>
+</footer>
+
+</body>
+</html>

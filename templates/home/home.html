@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block body %}
+{% load static %}
+  <header class="hero">
+      <div class="hero-text">
+          <h1>Fuel Your Future: Where Passion Meets Opportunity!</h1>
+          <p>Discover endless opportunities with Meet Match! Meet Match makes it easy to connect with the right jobs and talent.</p>
+          <div class="hero-buttons">
+              <button class="get-started">Get Started</button>
+              <button class="see-features">See Features</button>
+          </div>
+      </div>
+      <div class="hero-image">
+          <img src="{% static 'images\720dbd4b59d64a8005bbc24b00ac6643a4f77f14.png' %}" alt="AI Interview Image">
+      </div>
+  </header>
+  
+  <!-- Features Section -->
+<section class="features-section">
+<h2>Features</h2>
+<div class="features-cards">
+  <div class="feature-card">
+    <div class="icon green-bg"><i class="fas fa-robot"></i></div>
+    <h3>AI Questions</h3>
+    <p>Practice with realistic, adaptive AI interview questions.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon green-bg"><i class="fas fa-bolt"></i></div>
+    <h3>Instant Feedback</h3>
+    <p>Get actionable feedback on your answers in seconds.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon green-bg"><i class="fas fa-clock"></i></div>
+    <h3>Flexible Practice</h3>
+    <p>Interview anytime, anywhere, on any device.</p>
+  </div>
+</div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+<h2 class="how-title">How It Works</h2>
+<div class="how-steps">
+  <div class="step">
+    <img src="{% static 'images/signup.png' %}" alt="Sign Up Icon">
+    <div>
+      <h4>Sign Up</h4>
+      <p>Create your free account in seconds.</p>
+    </div>
+  </div>
+  <div class="step">
+    <img src="{% static 'images/interview.png' %}" alt="Interview Icon">
+    <div>
+      <h4>Start Interview</h4>
+      <p>Choose a role and begin your AI interview.</p>
+    </div>
+  </div>
+  <div class="step">
+    <img src="{% static 'images/feedback.png' %}" alt="Feedback Icon">
+    <div>
+      <h4>Get Feedback</h4>
+      <p>Review your performance and improve.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- DAshboard Section -->
+<section class="process-section">
+<h2 class="process-title">How Our Process Work</h2>
+</section>
+
+<!-- Plans Section -->
+<section class="pricing-section">
+<h2 class="pricing-title">Simple , Transparent pricing</h2>
+
+<div class="pricing-cards">
+
+  <!-- Business Plan -->
+  <div class="pricing-card">
+    <div class="plan-icon">🧑‍💼</div>
+    <h3>Business</h3>
+    <p class="subtitle">For solo entrepreneurs</p>
+    <p class="price">$19/ <span>month</span></p>
+    <button class="btn current">Current plan</button>
+    <ul class="features">
+      <li>✔️ 10 inventory locations</li>
+      <li>✔️ 24/7 chat support</li>
+      <li>✔️ Localized global selling (3 markets)</li>
+      <li>✔️ POS Lite</li>
+    </ul>
+  </div>
+
+  <!-- Advanced Plan -->
+  <div class="pricing-card highlight">
+    <div class="badge">POPULAR</div>
+    <div class="plan-icon">🔔</div>
+    <h3>Advanced</h3>
+    <p class="subtitle">As your business scales</p>
+    <p class="price">$299/ <span>month</span></p>
+    <button class="btn">Get Advanced</button>
+    <ul class="features">
+      <li>✔️ Custom reports and analytics</li>
+      <li>✔️ 100 inventory locations</li>
+      <li>✔️ Enhanced 24/7 chat support</li>
+      <li>✔️ Localized global selling (3 markets)</li>
+      <li>✔️ 15 additional staff accounts</li>
+    </ul>
+  </div>
+
+  <!-- Plus Plan -->
+  <div class="pricing-card">
+    <div class="plan-icon">💼</div>
+    <h3>Plus</h3>
+    <p class="subtitle">More complex businesses</p>
+    <p class="price">$499/ <span>month</span></p>
+    <button class="btn">Get Plus</button>
+    <ul class="features">
+      <li>✔️ Custom reports and analytics</li>
+      <li>✔️ 200 inventory locations</li>
+      <li>✔️ Priority 24/7 phone support</li>
+      <li>✔️ Localized global selling (50 markets)</li>
+      <li>✔️ Unlimited staff accounts</li>
+    </ul>
+  </div>
+
+</div>
+</section>
+<!-- Call to Action Section -->
+<section class="cta-section">
+<h2 class="cta-title">Ready to Transform Your Hiring Process?</h2>
+<p class="cta-subtitle">
+  Join hundreds of companies using our AI interview platform to find better candidates faster.
+</p>
+<button class="cta-button">Start Your Free Trial Now !</button>
+<p class="cta-note">No credit card required. 14-day free trial.</p>
+</section>
+{% endblock body %}
+

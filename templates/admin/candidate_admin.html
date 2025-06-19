@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Candidates</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!-- ✅ Top Navbar -->
+  <div class="top-navbar">
+    <img src="{% static 'images/base color-wide.svg' %}" class="top-logo" alt="Logo">
+  </div>
+
+  <!-- ✅ Main Layout -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar-links">
+        <li><a href="{% url 'AdminDashboard:admin_dashboard' %}">Dashboard (Home)</a></li>
+        <li><a href="#">Interview Scheduling</a></li>
+        <li><a href="#">Evaluation Insights</a></li>
+        <li class="sidebar-section">Other Information</li>
+        <li><a href="{% url 'Questions:questions' %}">Questions Feed</a></li>
+        <li><a href="{% url 'AdminDashboard:candidate' %}">Candidates Info</a></li>
+        <li><a href="#">Help</a></li>
+        <li class="sidebar-section">Settings</li>
+        <li><a href="#">Personal Settings</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="main-content">
+      <h2 class="dashboard-title">All Candidates</h2>
+
+      <div class="candidates-grid">
+        {% for dashboard in dashboard %}
+        <div class="candidate-card">
+          <div class="candidate-header">
+            <img src="{{dashboard.image.url}}" class="candidate-img" alt="profile">
+            <div>
+              <h3>{{ dashboard.name }}</h3>
+              <p class="candidate-field">{{ dashboard.fields }}</p>
+            </div>
+          </div>
+          <p><strong>Email:</strong> {{ dashboard.mail }}</p>
+          <p><strong>Phone:</strong> {{ dashboard.phone }}</p>
+          <p><strong>Status:</strong> 
+            <span class="status-tag status-{{ candidate.status|lower }}">{{ dashboard.status|upper }}</span>
+          </p>
+          <p><strong>Score:</strong> {{ dashboard.evaluation_point }}/10</p>
+          <a href="{% url 'admin_dashboard:candidate_details' slug=dashboard.slug %}" class="btn-show-details">Show Details</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
