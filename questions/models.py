@@ -1,9 +1,11 @@
 from django.db import models
 from django.utils.text import slugify
 import datetime 
+from django.contrib.auth.models import User
 
 class Field(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -21,6 +23,7 @@ class Question(models.Model):
         ('Mid', 'Mid Level'),
         ('Advanced', 'Advanced'),
     ]
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='questions')
     level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
     question_text = models.TextField()

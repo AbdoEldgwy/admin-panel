@@ -49,7 +49,7 @@
             <span class="status-tag status-{{ candidate.status|lower }}">{{ dashboard.status|upper }}</span>
           </p>
           <p><strong>Score:</strong> {{ dashboard.evaluation_point }}/10</p>
-          <a href="{% url 'admin_dashboard:candidate_details' slug=dashboard.slug %}" class="btn-show-details">Show Details</a>
+          <a href="{% url 'AdminDashboard:candidate_details' slug=dashboard.slug %}" class="btn-show-details">Show Details</a>
         </div>
         {% endfor %}
       </div>
