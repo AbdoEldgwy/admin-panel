@@ -4,10 +4,11 @@ from django.contrib import messages
 from django.http import JsonResponse
 from .models import Dashboard
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
 
 def dashboard(request):
-    all_data = Dashboard.objects.all()
-
+    all_data = Dashboard.objects.filter(created_by=request.user)
     # GET Filters
     selected_field = request.GET.get('field')
     selected_status = request.GET.get('status')
@@ -35,23 +36,23 @@ def dashboard(request):
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
+@login_required
 def candidate(request):
-    dashboard = Dashboard.objects.all()
+    dashboard = Dashboard.objects.filter(created_by=request.user)
     context = {
         'dashboard': dashboard,
     }
     return render(request, 'admin/candidate_admin.html', context)
 
+@login_required
 def candidate_details(request, slug):
-    candidate = Dashboard.objects.get(slug=slug)
-    context = {
-        'candidate': candidate,
-    }
-    return render(request, 'admin/candidate_details.html', context)
+    candidate = get_object_or_404(Dashboard, slug=slug, created_by=request.user)
+    return render(request, 'admin/candidate_details.html', {'candidate': candidate})
+
 
 @require_POST
 def edit_candidate(request, candidate_id):
-    candidate = get_object_or_404(Dashboard, id=candidate_id)
+    candidate = get_object_or_404(Dashboard, id=candidate_id, created_by=request.user)
     
     try:
         # Update candidate fields
@@ -76,7 +77,7 @@ def edit_candidate(request, candidate_id):
 @require_POST
 def delete_candidate(request, candidate_id):
     try:
-        candidate = get_object_or_404(Dashboard, id=candidate_id)
+        candidate = get_object_or_404(Dashboard, id=candidate_id, created_by=request.user)
         candidate.delete()
         return redirect('AdminDashboard:admin_dashboard')
     except Dashboard.DoesNotExist:
