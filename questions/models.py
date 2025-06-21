@@ -4,7 +4,12 @@ import datetime
 from django.contrib.auth.models import User
 
 class Field(models.Model):
+    typeChoices = [
+        ('Techincal', 'Techincal'),
+        ('Soft Skill', 'Soft Skill'),
+    ]
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    field_type = models.CharField(max_length=50, choices=typeChoices, default='Techincal')
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
 

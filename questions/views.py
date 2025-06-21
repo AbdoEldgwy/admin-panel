@@ -51,6 +51,7 @@ def question_feed(request):
         questions = Question.objects.filter(field=field)
         field_data.append({
             'field_id': field.id,
+            'field_type': field.field_type,
             'field_name': field.name,
             'field_slug': field.slug,
             'total': questions.count(),

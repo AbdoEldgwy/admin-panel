@@ -4,11 +4,14 @@ from .models import Question, Field
 class FieldForm(forms.ModelForm):
     class Meta:
         model = Field
-        fields = ['name']
+        fields = ['name', 'field_type']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter field name'
+            }),
+            'field_type': forms.Select(attrs={
+                'class': 'form-control',
             })
         }
 

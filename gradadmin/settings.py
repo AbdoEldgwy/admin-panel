@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'home','accounts','admin_dashboard','questions',
+    'interview_scheduling','Job',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
