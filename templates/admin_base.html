@@ -1,5 +1,41 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Admin Panel{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <!-- ✅ Top Navbar -->
+  <div class="top-navbar">
+    <img src="{% static 'images/base color-wide.svg' %}" class="top-logo" alt="Logo">
+    {% block extra_css %}{% endblock %}
+  </div>
 
+  <!-- ✅ Main Layout -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar-links">
+        <li><a href="{% url 'AdminDashboard:admin_dashboard' %}">Dashboard (Home)</a></li>
+        <li><a href="{% url 'InterviewScheduling:interview_scheduling' %}">Interview Scheduling</a></li>
+        <li><a href="#">Talent Acquisition</a></li>
+        <li class="sidebar-section">Other Information</li>
+        <li><a href="{% url 'Questions:questions' %}">Questions Feed</a></li>
+        <li><a href="{% url 'AdminDashboard:candidate' %}">Candidates Info</a></li>
+        <li><a href="#">Help</a></li>
+        <li class="sidebar-section">Settings</li>
+        <li><a href="#">Personal Settings</a></li>
+      </ul>
+    </div>
 
-{% block body %}
-{% endblock body %}
+    <!-- ✅ Dynamic Page Content -->
+    <div class="main-content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+   {% block extra_js %}{% endblock %}
+</body>
+</html>
