@@ -1,49 +1,136 @@
 {% extends 'admin_base.html' %}
+{% load static %}
+{% load form_tags %}
 {% block title %}Interview Scheduling{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/interview.css' %}">
+<style>
+  .form-label {
+    font-weight: 500;
+    color: #04630E;
+  }
+  .form-control, .form-check-input {
+    border-radius: 0.5rem;
+    box-shadow: none !important;
+  }
+  .form-check-label {
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
+  .card {
+    border-radius: 1rem;
+    border: none;
+  }
+  .btn-success {
+    background-color: #04630E;
+    border-color: #04630E;
+    border-radius: 0.5rem;
+  }
+  .btn-success:hover {
+    background-color: #034f0b;
+  }
+  .input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<h2 class="dashboard-title">Create Interview Session</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="mb-1">Schedule a New Interview</h2>
+    <p class="text-muted">Publish a job and define its interview session details.</p>
+  </div>
+</div>
 
-<form method="POST" enctype="multipart/form-data" class="interview-form">
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} rounded-3">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<form method="post">
   {% csrf_token %}
+  <div class="card p-4 shadow-sm">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ form.job.label }}</label>
+        {{ form.job|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ form.status.label }}</label>
+        {{ form.status|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ form.scheduled_at.label }}</label>
+        {{ form.scheduled_at|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">{{ form.ended_at.label }}</label>
+        {{ form.ended_at|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6 mb-4">
+        <label class="form-label">{{ form.duration_minutes.label }}</label>
+        {{ form.duration_minutes|add_class:"form-control" }}
+      </div>
+    </div>
 
-  <div class="form-section">
-    <h3>Job Details</h3>
-    <label for="job_title">Job Title</label>
-    <input type="text" id="job_title" name="job_title" class="form-control" required>
+    <hr class="my-4" />
+    <h5 class="text-success mb-3">Select Fields for Question Generation</h5>
+    <div class="row mb-4">
+      {% for checkbox in form.selected_fields %}
+        <div class="col-md-4 mb-2">
+          <div class="form-check">
+            {{ checkbox.tag }}
+            <label class="form-check-label">{{ checkbox.choice_label }}</label>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-muted">You don’t have any fields yet.</p>
+      {% endfor %}
+    </div>
 
-    <label for="job_description">Description</label>
-    <textarea id="job_description" name="job_description" class="form-control" rows="4" required></textarea>
-
-    <label for="job_field">Field</label>
-    <input type="text" id="job_field" name="job_field" class="form-control" required>
+    <div class="text-end">
+      <button type="submit" class="btn btn-success px-4 py-2">Generate Interview Session</button>
+    </div>
   </div>
-
-  <div class="form-section">
-    <h3>Interview Settings</h3>
-
-    <label for="difficulty">Difficulty</label>
-    <select id="difficulty" name="difficulty" class="form-control" required>
-      <option value="">-- Select Difficulty --</option>
-      <option value="Beginner">Beginner</option>
-      <option value="Mid">Mid Level</option>
-      <option value="Advanced">Advanced</option>
-    </select>
-
-    <label for="status">Interview Status</label>
-    <select id="status" name="status" class="form-control" required>
-      <option value="">-- Select Status --</option>
-      <option value="Open">Open</option>
-      <option value="Closed">Closed</option>
-    </select>
-
-    <label for="date">Interview Date</label>
-    <input type="date" id="date" name="interview_date" class="form-control" required>
-
-    <label for="duration">Duration (minutes)</label>
-    <input type="number" id="duration" name="duration" class="form-control" required>
-  </div>
-
-  <button type="submit" class="btn-submit">Create Interview</button>
 </form>
+
+<hr class="my-5" />
+
+<h4 class="mb-3">Your Scheduled Interviews</h4>
+<div class="table-responsive">
+  <table class="table table-bordered rounded-3">
+    <thead class="table-success">
+      <tr>
+        <th>Job</th>
+        <th>Status</th>
+        <th>Scheduled At</th>
+        <th>Ends At</th>
+        <th>Duration</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for session in sessions %}
+      <tr>
+        <td>{{ session.job.title }}</td>
+        <td>{{ session.status }}</td>
+        <td>{{ session.scheduled_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ session.ended_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ session.duration_minutes }} mins</td>
+        <td>
+          <a href="{% url 'InterviewScheduling:edit_session' session.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+          <a href="{% url 'InterviewScheduling:delete_session' session.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center text-muted">No interview sessions scheduled yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

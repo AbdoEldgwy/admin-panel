@@ -1,0 +1,14 @@
+{% extends "admin_base.html" %}
+{% block title %}Select Fields for Questions{% endblock %}
+
+{% block content %}
+  <h2>Select Question Packs</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.fields }}
+    </div>
+    <button type="submit" class="btn btn-success">Generate Questions</button>
+    <a href="{% url 'InterviewScheduling:edit_session' session.id %}" class="btn btn-secondary">Back</a>
+  </form>
+{% endblock %}

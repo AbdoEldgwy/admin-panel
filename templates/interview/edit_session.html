@@ -1,0 +1,36 @@
+{% extends "admin_base.html" %}
+{% load static %}
+
+{% block title %}Edit Interview Session{% endblock %}
+
+{% block content %}
+  <h2>Edit Interview Session</h2>
+
+  <!-- زر توليد الأسئلة -->
+  <a href="{% url 'InterviewScheduling:generate_questions' session.id %}" class="btn btn-success mb-3">
+    <i class="fas fa-magic"></i> Generate Questions
+  </a>
+
+  <!-- عرض محتوى question_querey -->
+  {% if session.question_querey %}
+    <div class="card">
+      <div class="card-header bg-success text-white">Selected Questions</div>
+      <div class="card-body">
+        {% for category, questions in session.question_querey.items %}
+          <h5 class="mt-3 text-capitalize">{{ category }}</h5>
+          <ul class="list-group mb-3">
+            {% for q in questions %}
+              <li class="list-group-item">
+                <strong>ID:</strong> {{ q.id }} |
+                <strong>Field:</strong> {{ q.field }} <br>
+                <strong>Q:</strong> {{ q.question }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <p class="text-muted">No questions generated yet.</p>
+  {% endif %}
+{% endblock %}
