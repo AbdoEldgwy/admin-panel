@@ -20,7 +20,7 @@ STATUS_CHOICES = (
 )
 
 class Dashboard(models.Model):
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)  
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to=image_upload, blank=True, null=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True, null=True)
@@ -31,6 +31,7 @@ class Dashboard(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     evaluation_point = models.FloatField(default=0.0)
     date = models.DateTimeField(auto_now_add=True)
+    evaluation_dec_json = models.JSONField(default=dict, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

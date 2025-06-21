@@ -1209,16 +1209,17 @@ table th, table td {
 
 /* Info boxes */
 .info-box {
-  background-color: #e9f5ef;
+  background-color: #e4f8ed;
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
+  padding-right: 400px;
 }
 
 .info-box h4 {
   margin-bottom: 14px;
   font-size: 16px;
-  color: #278c5c;
+  color: #1a6430;
 }
 
 .info-grid {
@@ -1230,8 +1231,8 @@ table th, table td {
 
 /* حالة المستخدم */
 .status-badge {
-  background-color: #d9eaff;
-  color: #278c5c;
+  background-color: #188646;
+  color: #bcfddf;
   padding: 4px 10px;
   border-radius: 8px;
   font-size: 12px;

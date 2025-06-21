@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin_dashboard/',include('admin_dashboard.urls',namespace='AdminDashboard')),
     path('admin_dashboard/questions/',include('questions.urls',namespace='Questions')),
     path('accounts/',include('accounts.urls',namespace='accounts')),
+    path('admin_dashboard/interview_scheduling/',include('interview_scheduling.urls',namespace='InterviewScheduling')),
     path('admin/', admin.site.urls),
     path('',include('home.urls',namespace='Home')),
 ]
