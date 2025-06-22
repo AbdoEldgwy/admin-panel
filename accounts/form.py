@@ -8,7 +8,9 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
     full_name = forms.CharField(label="Full Name", max_length=100)
+    user_name = forms.CharField(label="Username", max_length=100)  
     email = forms.EmailField(label="Email")
+    company_name = forms.CharField(label="Company Name", max_length=100)  
     phone = forms.CharField(label="Phone Number", max_length=20)
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
     confirm_password = forms.CharField(label="Confirm Password", widget=forms.PasswordInput)
@@ -20,6 +22,10 @@ class RegisterForm(forms.Form):
 
         if password and confirm_password and password != confirm_password:
             raise ValidationError("Passwords do not match.")
+
+        user_name = cleaned_data.get("user_name")
+        if User.objects.filter(username=user_name).exists():
+            raise ValidationError("An account with this username already exists.")
 
         email = cleaned_data.get("email")
         if User.objects.filter(email=email).exists():

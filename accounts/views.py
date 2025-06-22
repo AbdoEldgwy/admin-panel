@@ -14,8 +14,8 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            auth_login(request, user)  # ✅ تسجيل الدخول
-            return redirect('AdminDashboard:admin_dashboard')  # أو أي صفحة تانية بعد الدخول
+            auth_login(request, user) 
+            return redirect('AdminDashboard:admin_dashboard') 
         else:
             msg = 'Invalid email or password.'
 
@@ -24,25 +24,25 @@ def login_view(request):
 def register_view(request):
     form = RegisterForm(request.POST or None)
     if request.method == 'POST':
+        print(form.errors)
         if form.is_valid():
             full_name = form.cleaned_data['full_name']
+            username = form.cleaned_data['user_name']
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
+            company = form.cleaned_data['company_name']
             password = form.cleaned_data['password']
 
-            # إنشاء المستخدم
             user = User.objects.create_user(
-                username=email,
+                username=username,
                 email=email,
                 password=password,
-                first_name=full_name
+                first_name=full_name,
+                last_name=company  
             )
 
-            # حفظ رقم الهاتف (ممكن نضيفه لاحقًا في نموذج مخصص)
-            # أو نستخدم user.profile.phone = phone
-
             auth_login(request, user)
-            return redirect('accounts:login')  # بعد التسجيل الناجح
+            return redirect('accounts:login') 
 
     return render(request, 'accounts/register.html', {'form': form})
 

@@ -1,27 +1,96 @@
-{% extends 'admin_base.html' %}
-{% block title %}Candidates Info{% endblock %}
-
-{% block content %}
-  <h2 class="dashboard-title">All Candidates</h2>
-
-  <div class="candidates-grid">
-    {% for dashboard in dashboard %}
-    <div class="candidate-card">
-      <div class="candidate-header">
-        <img src="{{ dashboard.image.url }}" class="candidate-img" alt="profile">
-        <div>
-          <h3>{{ dashboard.name }}</h3>
-          <p class="candidate-field">{{ dashboard.fields }}</p>
-        </div>
-      </div>
-      <p><strong>Email:</strong> {{ dashboard.mail }}</p>
-      <p><strong>Phone:</strong> {{ dashboard.phone }}</p>
-      <p><strong>Status:</strong> 
-        <span class="status-tag status-{{ dashboard.status|lower }}">{{ dashboard.status|upper }}</span>
-      </p>
-      <p><strong>Score:</strong> {{ dashboard.evaluation_point }}/10</p>
-      <a href="{% url 'AdminDashboard:candidate_details' slug=dashboard.slug %}" class="btn-show-details">Show Details</a>
-    </div>
-    {% endfor %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Candidates</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!-- ✅ Top Navbar -->
+  <div class="top-navbar">
+    <img src="{% static 'images/base color-wide.svg' %}" class="top-logo" alt="Logo">
   </div>
-{% endblock %}
+
+  <!-- ✅ Main Layout -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar-links">
+        <li><a href="{% url 'AdminDashboard:admin_dashboard' %}">Dashboard (Home)</a></li>
+        <li><a href="#">Interview Scheduling</a></li>
+        <li><a href="#">Evaluation Insights</a></li>
+        <li class="sidebar-section">Other Information</li>
+        <li><a href="{% url 'Questions:questions' %}">Questions Feed</a></li>
+        <li><a href="{% url 'AdminDashboard:candidate' %}">Candidates Info</a></li>
+        <li><a href="#">Help</a></li>
+        <li class="sidebar-section">Settings</li>
+        <li><a href="#">Personal Settings</a></li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 class="dashboard-title">All Candidates</h2>
+        <form method="get" style="display: flex; gap: 10px; align-items: center;">
+          <input type="text" name="search" placeholder="Search..." value="{{ search_query }}" class="dashboard-search">
+
+          <select name="field" class="dashboard-select" onchange="this.form.submit()">
+            <option value="">All Fields</option>
+            {% for field in unique_fields %}
+              <option value="{{ field }}" {% if field == selected_field %}selected{% endif %}>{{ field }}</option>
+            {% endfor %}
+          </select>
+
+          <select name="status" class="dashboard-select" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            {% for status in unique_statuses %}
+              <option value="{{ status }}" {% if status == selected_status %}selected{% endif %}>{{ status }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+
+      <div class="candidates-grid">
+        {% for dashboard in dashboard %}
+        <div class="candidate-card">
+          <div class="candidate-header">
+            <img src="{{ dashboard.image.url }}" class="candidate-img" alt="profile">
+            <div>
+              <h3>{{ dashboard.name }}</h3>
+              <p class="candidate-field">{{ dashboard.fields }}</p>
+            </div>
+          </div>
+          <p><strong>Email:</strong> {{ dashboard.mail }}</p>
+          <p><strong>Phone:</strong> {{ dashboard.phone }}</p>
+          <p><strong>Status:</strong> 
+            <span class="status-tag status-{{ dashboard.status|lower }}">{{ dashboard.status|upper }}</span>
+          </p>
+          <p><strong>Score:</strong> {{ dashboard.evaluation_point }}/10</p>
+          <a href="{% url 'AdminDashboard:candidate_details' slug=dashboard.slug %}" class="btn-show-details">Show Details</a>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="pagination">
+        {% if dashboard.has_previous %}
+          <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if selected_field %}field={{ selected_field }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ dashboard.previous_page_number }}" class="pagination-btn">Previous</a>
+        {% endif %}
+
+        {% for num in dashboard.paginator.page_range %}
+          {% if dashboard.number == num %}
+            <span class="pagination-btn active">{{ num }}</span>
+          {% else %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if selected_field %}field={{ selected_field }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ num }}" class="pagination-btn">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if dashboard.has_next %}
+          <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if selected_field %}field={{ selected_field }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}page={{ dashboard.next_page_number }}" class="pagination-btn">Next</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
