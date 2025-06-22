@@ -32,8 +32,8 @@ def interview_scheduling_view(request):
 
             # Build question_querey structure
             question_query = {
-                "technical": [{"id": q.id, "field": q.field.name, "question": q.question_text} for q in technical],
-                "soft skill": [{"id": q.id, "field": q.field.name, "question": q.question_text} for q in soft]
+                "technical": [{"id": q.id, "Skill": q.field.name, "question": q.question_text} for q in technical],
+                "soft skill": [{"id": q.id, "Skill": q.field.name, "question": q.question_text} for q in soft]
             }
 
             session.question_querey = question_query

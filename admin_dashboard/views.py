@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .models import Dashboard
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 def dashboard(request):
@@ -37,10 +38,45 @@ def dashboard(request):
     return render(request, 'admin/admin_dashboard.html', context)
 
 @login_required
+@login_required
 def candidate(request):
     dashboard = Dashboard.objects.filter(created_by=request.user)
+
+    # فلترة البحث بالكلمة المفتاحية
+    search_query = request.GET.get('search', '')
+    if search_query:
+        dashboard = dashboard.filter(
+            Q(name__icontains=search_query) |
+            Q(mail__icontains=search_query) |
+            Q(phone__icontains=search_query)
+        )
+
+    # فلترة بالمجال (field)
+    selected_field = request.GET.get('field')
+    if selected_field:
+        dashboard = dashboard.filter(fields=selected_field)
+
+    # فلترة بالحالة (status)
+    selected_status = request.GET.get('status')
+    if selected_status:
+        dashboard = dashboard.filter(status=selected_status)
+
+    # القيم الفريدة للـ dropdowns
+    unique_fields = Dashboard.objects.values_list('fields', flat=True).distinct()
+    unique_statuses = Dashboard.objects.values_list('status', flat=True).distinct()
+
+    # Pagination
+    paginator = Paginator(dashboard, 6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'dashboard': dashboard,
+        'dashboard': page_obj,
+        'search_query': search_query,
+        'unique_fields': unique_fields,
+        'unique_statuses': unique_statuses,
+        'selected_field': selected_field,
+        'selected_status': selected_status,
     }
     return render(request, 'admin/candidate_admin.html', context)
 
