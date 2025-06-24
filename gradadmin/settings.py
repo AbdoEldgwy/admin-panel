@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     "widget_tweaks",
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
