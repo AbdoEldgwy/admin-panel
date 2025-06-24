@@ -1,6 +1,10 @@
 {% extends "base.html" %}
-{% block body %}
 {% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+{% endblock %}
+
+{% block body %}
   <header class="hero">
       <div class="hero-text">
           <h1>Fuel Your Future: Where Passion Meets Opportunity!</h1>

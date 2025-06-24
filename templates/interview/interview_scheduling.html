@@ -5,8 +5,12 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/interview.css' %}">
+
+{% endblock %}
+
+{% block content %}
 <style>
-  .form-label {
+    .form-label {
     font-weight: 500;
     color: #04630E;
   }
@@ -30,107 +34,203 @@
   .btn-success:hover {
     background-color: #034f0b;
   }
-  .input[type="checkbox"] {
-  margin-right: 0.5rem;
+  .popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .popup-content {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 700px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  }
+  input[type="date"],
+  input[type="time"] {
+    height: 40px;
+  }
+  .popup-content .form-control,
+  .popup-content input[type="date"],
+  .popup-content input[type="time"] {
+   width: 100%;
+}
+
+  .card {
+    border-radius: 1rem;
+  }
+
+.custom-multiselect {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.select-box {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.checkboxes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
+  border-radius: 0 0 0.5rem 0.5rem;
+  padding: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.custom-multiselect.active .checkboxes {
+  display: block;
+}
+
+#selectedCount {
+  font-weight: 500;
+}
+
+.custom-multiselect-container {
+  position: relative;
+  max-width: 100%;
+  width: 100%;
+  min-width: 400px;
+  margin-bottom: 2rem;
+}
+
+.select-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding: 0 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  border: 1px solid #ccc;
+}
+
+.select-btn .btn-text {
+  font-size: 16px;
+  color: #333;
+}
+
+.select-btn .arrow-dwn {
+  background: #6e93f7;
+  color: white;
+  height: 21px;
+  width: 21px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-btn.open .arrow-dwn {
+  transform: rotate(-180deg);
+}
+
+.list-items {
+  margin-top: 10px;
+  padding: 10px 0;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  max-height: 250px;
+  overflow-y: auto;
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+}
+
+.select-btn.open + .list-items {
+  display: block;
+}
+
+.list-items .item {
+  padding: 8px 16px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.list-items .item:hover {
+  background-color: #f0f0f0;
+}
+
+.item-text {
+  margin-left: 8px;
+  color: #333;
+}
+
+.item input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 10px;
 }
 </style>
-{% endblock %}
 
-{% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
-    <h2 class="mb-1">Schedule a New Interview</h2>
+    <h2 class="mb-1">Interview Scheduling</h2>
     <p class="text-muted">Publish a job and define its interview session details.</p>
+  </div>
+  <div>
+    <button type="button" class="btn btn-success px-4 py-2" onclick="openPopup()">+ Generate Interview Session</button>
   </div>
 </div>
 
 {% if messages %}
   {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} rounded-3">{{ message }}</div>
+    <div class="alert alert-{{ message.tags }} rounded-3 alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   {% endfor %}
 {% endif %}
 
-<form method="post">
-  {% csrf_token %}
-  <div class="card p-4 shadow-sm">
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">{{ form.job.label }}</label>
-        {{ form.job|add_class:"form-control" }}
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">{{ form.status.label }}</label>
-        {{ form.status|add_class:"form-control" }}
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">{{ form.scheduled_at.label }}</label>
-        {{ form.scheduled_at|add_class:"form-control" }}
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">{{ form.ended_at.label }}</label>
-        {{ form.ended_at|add_class:"form-control" }}
-      </div>
-      <div class="col-md-6 mb-4">
-        <label class="form-label">{{ form.duration_minutes.label }}</label>
-        {{ form.duration_minutes|add_class:"form-control" }}
-      </div>
+<!-- Interview Session Popup Modal -->
+<div class="popup-overlay" id="interviewPopup">
+  <div class="popup-content">
+    <div class="popup-header d-flex justify-content-between align-items-center mb-3">
+      <h4>Generate Interview Session</h4>
+      <button type="button" class="btn-close" aria-label="Close" onclick="closePopup()"></button>
     </div>
 
-    <hr class="my-4" />
-    <h5 class="text-success mb-3">Select Fields for Question Generation</h5>
-    <div class="row mb-4">
-      {% for checkbox in form.selected_fields %}
-        <div class="col-md-4 mb-2">
-          <div class="form-check">
-            {{ checkbox.tag }}
-            <label class="form-check-label">{{ checkbox.choice_label }}</label>
-          </div>
-        </div>
-      {% empty %}
-        <p class="text-muted">You don’t have any fields yet.</p>
-      {% endfor %}
-    </div>
+ {% block extra_js %}
+  <script src="{% static 'js/interviewSc.js' %}"></script>
+{% endblock %}
 
-    <div class="text-end">
-      <button type="submit" class="btn btn-success px-4 py-2">Generate Interview Session</button>
-    </div>
-  </div>
-</form>
-
-<hr class="my-5" />
-
-<h4 class="mb-3">Your Scheduled Interviews</h4>
-<div class="table-responsive">
-  <table class="table table-bordered rounded-3">
-    <thead class="table-success">
-      <tr>
-        <th>Job</th>
-        <th>Status</th>
-        <th>Scheduled At</th>
-        <th>Ends At</th>
-        <th>Duration</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for session in sessions %}
-      <tr>
-        <td>{{ session.job.title }}</td>
-        <td>{{ session.status }}</td>
-        <td>{{ session.scheduled_at|date:"Y-m-d H:i" }}</td>
-        <td>{{ session.ended_at|date:"Y-m-d H:i" }}</td>
-        <td>{{ session.duration_minutes }} mins</td>
-        <td>
-          <a href="{% url 'InterviewScheduling:edit_session' session.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-          <a href="{% url 'InterviewScheduling:delete_session' session.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="6" class="text-center text-muted">No interview sessions scheduled yet.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
 {% endblock %}
