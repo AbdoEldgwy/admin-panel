@@ -51,17 +51,17 @@ def candidate(request):
             Q(phone__icontains=search_query)
         )
 
-    # فلترة بالمجال (field)
+    # فلترة (field)
     selected_field = request.GET.get('field')
     if selected_field:
         dashboard = dashboard.filter(fields=selected_field)
 
-    # فلترة بالحالة (status)
+    # فلترة (status)
     selected_status = request.GET.get('status')
     if selected_status:
         dashboard = dashboard.filter(status=selected_status)
 
-    # القيم الفريدة للـ dropdowns
+    # unique values
     unique_fields = Dashboard.objects.values_list('fields', flat=True).distinct()
     unique_statuses = Dashboard.objects.values_list('status', flat=True).distinct()
 

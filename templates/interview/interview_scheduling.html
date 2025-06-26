@@ -38,7 +38,7 @@
           <p>Status: <strong>{{ session.status }}</strong></p>
           <p>Scheduled: {{ session.scheduled_at|date:"Y-m-d H:i" }}</p>
           <p>Ends at: {{ session.ended_at|date:"Y-m-d H:i" }}</p>
-          <a href="{% url 'InterviewScheduling:edit_session' session.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <a href="{% url 'InterviewScheduling:start_session' session.id %}" class="btn btn-sm btn-outline-primary">Start Now</a>
           <a href="{% url 'InterviewScheduling:delete_session' session.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
         </div>
       </div>

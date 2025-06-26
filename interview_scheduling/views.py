@@ -4,8 +4,9 @@ from .forms import InterviewSessionForm
 from questions.models import Question
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from admin_dashboard.models import Dashboard
 import random
+
 
 @login_required
 def interview_scheduling_view(request):
@@ -37,9 +38,9 @@ def interview_scheduling_view(request):
             session.save()
             messages.success(request, "Interview session created successfully.")
             return redirect('InterviewScheduling:interview_scheduling')
+        else:
+            messages.error(request, "Please correct the errors in the form.")
     else:
-        messages.error(request, "Please correct the errors in the form.")
-
         form = InterviewSessionForm(user=request.user)
 
     sessions = InterviewSession.objects.filter(created_by=request.user).order_by('-created_at')
@@ -48,21 +49,40 @@ def interview_scheduling_view(request):
         'sessions': sessions
     })
 
-
-def edit_session(request, session_id):
-    session = get_object_or_404(InterviewSession, id=session_id)
-    if request.method == 'POST':
-        form = InterviewSessionForm(request.POST, instance=session)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Interview session updated successfully.')
-            return redirect('InterviewScheduling:interview_scheduling')
-    else:
-        form = InterviewSessionForm(instance=session)
-    return render(request, 'interview/edit_session.html', {'form': form, 'session': session})
-
 def delete_session(request, session_id):
     session = get_object_or_404(InterviewSession, id=session_id)
     session.delete()
     messages.success(request, 'Interview session deleted successfully.')
     return redirect('InterviewScheduling:interview_scheduling')
+
+def start_session(request, session_id):
+    session = get_object_or_404(InterviewSession, id=session_id)
+    if session.status == 'Closed':
+        candidates = Dashboard.objects.filter(fields=session.job, created_by=request.user, status='On Stage')
+        session.status = 'Open'
+        session.save()
+        send_email_for_candidate(candidates)
+    else:
+        messages.error(request, 'Interview session is already started.')
+
+    return redirect('InterviewScheduling:interview_scheduling')
+
+
+def send_email_for_candidate(candidates):
+    from django.core.mail import EmailMessage
+    from django.utils.html import format_html
+    for candidate in candidates:
+        subject = 'Interview Scheduling'
+        html_message = format_html(
+            'You have been selected for an interview. Please <a href="http://localhost:8000/interview_scheduling/{}">click here to start the interview</a>.',
+            candidate.session_slug
+        )
+
+        email = EmailMessage(
+            subject=subject,
+            body=html_message,
+            from_email='abdo.eldgwy1@gmail.com',
+            to=[candidate.mail],
+        )
+        email.content_subtype = "html"  # Mark the content as HTML
+        email.send(fail_silently=False)
