@@ -1,0 +1,401 @@
+/* ========================= Admin Dashboard ========================= */
+.top-navbar {
+  background-color: white;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  border-bottom: 1px solid #eee;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.top-logo {
+  height: 36px;
+}
+
+.dashboard-container {
+  display: flex;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+}
+
+.sidebar {
+  width: 230px;
+  background-color: #278c5c;
+  color: white;
+  padding: 30px 20px 20px 20px;
+  height: calc(100vh - 60px);
+  position: fixed;
+  top: 60px;
+  left: 0;
+}
+
+.sidebar-logo {
+  width: 120px;
+  margin-bottom: 40px;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+  font-size: 15px;
+}
+
+.sidebar-links li {
+  margin-bottom: 10px;
+}
+
+.sidebar-links a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.sidebar-links a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-section {
+  font-size: 13px;
+  color: #cce7dc;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.main-content {
+  margin-left: 230px;
+  padding: 30px 40px;
+  flex-grow: 1;
+  background-color: #f5f6fa;
+  min-height: calc(100vh - 60px);
+}
+
+.dashboard-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* === Filters Row === */
+.dashboard-filters {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-search {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.dashboard-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.add-candidate-btn {
+  background-color: #007c4d;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.add-candidate-btn:hover {
+  background-color: #2369d8;
+}
+
+/* === Status Badges === */
+.status-applied {
+  color: #007c4d;
+  font-weight: 600;
+  background-color: #e7f0fd;
+}
+
+.status-awaiting {
+  color: #d1a400;
+  font-weight: 600;
+  background-color: #fff8dc;
+}
+
+.status-interviewed {
+  background-color: #e1f7e7;
+  color: #278c5c;
+}
+
+/* === Action Buttons === */
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.edit-btn {
+  background-color: #04630E;
+  color: white;
+}
+
+.cv-button {
+  background-color: #e7f0fd;
+  color: #278c5c;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: inline-block;
+  font-weight: 500;
+  transition: 0.2s ease-in-out;
+}
+
+.cv-button:hover {
+  background-color: #d3e4fb;
+}
+
+.cv-missing {
+  color: #888;
+  font-style: italic;
+}
+
+/* === Pagination === */
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.pagination-btn:hover {
+  background-color: #ddd;
+}
+
+.pagination-btn.active {
+  background-color: #007c4d;
+  color: white;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+/* ========== Candidates Cards ========== */
+.candidates-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.candidate-card {
+  background: #fff;
+  padding: 28px;
+  border-radius: 18px;
+  width: 340px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: 0.3s ease-in-out;
+}
+
+.candidate-card p {
+  margin-bottom: 10px;
+}
+
+.candidate-card p:last-child {
+  margin-bottom: 0;
+}
+
+.candidate-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.candidate-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.candidate-field {
+  font-size: 14px;
+  color: #777;
+  margin-top: -4px;
+}
+
+.status-tag {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.view-btn {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #04630E;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.view-btn:hover {
+  background-color: #1f6f4b;
+}
+
+/* =================== Candidate Details Page =================== */
+.candidate-details-layout {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.candidate-profile-box {
+  background-color: white;
+  padding: 24px;
+  width: 280px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.candidate-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.candidate-profile-box h3 {
+  margin-bottom: 4px;
+}
+
+.score {
+  font-size: 18px;
+  font-weight: bold;
+  color: #04630E;
+  margin-bottom: 16px;
+}
+
+.score span {
+  font-size: 12px;
+  color: #555;
+}
+
+.candidate-profile-box select {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.profile-info {
+  margin: 20px 0;
+  text-align: left;
+  font-size: 14px;
+}
+
+.job-details {
+  font-size: 14px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.edit-btn {
+  background-color: #04630E;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 24px;
+}
+
+.tab {
+  text-decoration: none;
+  padding-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+
+.tab.active {
+  color: #278c5c;
+  border-bottom: 3px solid #278c5c;
+}
+
+/* Info boxes */
+.info-box {
+  background-color: #e4f8ed;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  padding-right: 400px;
+}
+
+.info-box h4 {
+  margin-bottom: 14px;
+  font-size: 16px;
+  color: #1a6430;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+
+/* status-badge */
+.status-badge {
+  background-color: #188646;
+  color: #bcfddf;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}

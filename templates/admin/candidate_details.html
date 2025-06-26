@@ -3,6 +3,9 @@
 {% load static %}
 {% block title %}Candidate Details{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
+{% endblock %}
 {% block content %}
   <div class="candidate-details-layout">
     <!-- Left Info Panel -->

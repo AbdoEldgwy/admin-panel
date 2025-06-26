@@ -4,8 +4,8 @@ from .forms import InterviewSessionForm
 from questions.models import Question
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import random
 from django.http import JsonResponse
+import random
 
 @login_required
 def interview_scheduling_view(request):
@@ -35,22 +35,11 @@ def interview_scheduling_view(request):
 
             session.question_querey = question_query
             session.save()
-
-            # ✅ If AJAX: return JSON
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'id': session.id,
-                    'job': session.job.title,
-                    'status': session.status,
-                    'duration': session.duration_minutes,
-                    'scheduled_at': session.scheduled_at.strftime('%Y-%m-%d %H:%M'),
-                    'ended_at': session.ended_at.strftime('%Y-%m-%d %H:%M'),
-                    'delete_url': f"/InterviewScheduling/delete/{session.id}/"
-                })
-
             messages.success(request, "Interview session created successfully.")
             return redirect('InterviewScheduling:interview_scheduling')
     else:
+        messages.error(request, "Please correct the errors in the form.")
+
         form = InterviewSessionForm(user=request.user)
 
     sessions = InterviewSession.objects.filter(created_by=request.user).order_by('-created_at')

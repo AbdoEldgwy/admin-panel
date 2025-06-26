@@ -1,31 +1,8 @@
-/* ========== Dashboard Title & Filters ========== */
+/* ========== Dashboard Title ========== */
 .dashboard-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.dashboard-filters {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-  align-items: center;
-}
-
-.dashboard-search {
-  padding: 8px 16px;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  width: 240px;
-  font-size: 14px;
-}
-
-.dashboard-select {
-  padding: 8px 16px;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  font-size: 14px;
-  min-width: 160px;
+  margin-bottom: 30px;
 }
 
 /* ========== AI Filtration Button ========== */
@@ -232,3 +209,110 @@ td:first-child {
   border-color: #1890ff;
   color: white;
 }
+
+/* === Filters Row === */
+.dashboard-filters {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-search {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+.dashboard-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid #e5f6d8;
+  min-width: 160px;
+}
+
+.add-candidate-btn {
+  background-color: #007c4d;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.add-candidate-btn:hover {
+  background-color: #2369d8;
+}
+
+/* === Table === */
+.dashboard-table {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table thead {
+  background-color: #f0f2f5;
+  font-size: 14px;
+  text-align: left;
+}
+
+table th, table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* === Status Badges === */
+.status-applied {
+  color: #007c4d;
+  font-weight: 600;
+  background-color: #e7f0fd;
+}
+
+.status-awaiting {
+  color: #d1a400;
+  font-weight: 600;
+  background-color: #fff8dc;
+}
+
+.status-interviewed {
+  background-color: #e1f7e7;
+  color: #278c5c;
+}
+
