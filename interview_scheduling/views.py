@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from admin_dashboard.models import Dashboard
 import random
-
+from django.core.mail import EmailMessage
+from django.utils.html import format_html
 
 @login_required
 def interview_scheduling_view(request):
@@ -69,9 +70,9 @@ def start_session(request, session_id):
 
 
 def send_email_for_candidate(candidates):
-    from django.core.mail import EmailMessage
-    from django.utils.html import format_html
     for candidate in candidates:
+        candidate.status = 'Pending'
+        candidate.save()
         subject = 'Interview Scheduling'
         html_message = format_html(
             'You have been selected for an interview. Please <a href="http://localhost:8000/interview_scheduling/{}">click here to start the interview</a>.',
