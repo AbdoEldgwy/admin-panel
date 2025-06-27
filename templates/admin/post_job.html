@@ -31,26 +31,23 @@
 </div>
 {% endif %}
 
-<!-- Job Post Form -->
+<!-- Job Post Form Popup -->
 <div class="popup-overlay" id="jobPopup" style="display: none;">
   <div class="popup-content">
-  <div class="popup-header d-flex justify-content-between align-items-center">
-    <h3>New Job Details</h3>
-    <button type="button" class="btn-close" aria-label="Close" onclick="closeJobPopup()"></button>
-  </div>
+    <div class="popup-header d-flex justify-content-between align-items-center">
+      <h3>New Job Details</h3>
+      <button type="button" class="btn-close" aria-label="Close" onclick="closeJobPopup()"></button>
+    </div>
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-
       <div class="form-group mb-3">
         <label for="title">Job Title</label>
         <input type="text" name="title" id="title" class="form-control" required>
       </div>
-
       <div class="form-group mb-3">
         <label for="location">Location</label>
         <input type="text" name="location" id="location" class="form-control" required>
       </div>
-
       <div class="form-group mb-3">
         <label for="type_job">Job Type</label>
         <select name="type_job" id="type_job" class="form-control" required>
@@ -59,7 +56,6 @@
           <option value="Internship">Internship</option>
         </select>
       </div>
-
       <div class="form-group mb-3">
         <label for="level">Job Level</label>
         <select name="level" id="level" class="form-control" required>
@@ -68,27 +64,22 @@
           <option value="Advanced">Advanced</option>
         </select>
       </div>
-
       <div class="form-group mb-3">
         <label for="description">Job Description</label>
         <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
       </div>
-
       <div class="form-group mb-3">
         <label for="qualifications">Qualifications</label>
         <textarea name="qualifications" id="qualifications" class="form-control" rows="3" required></textarea>
       </div>
-
       <div class="form-group mb-3">
         <label for="vacancy">Number of Vacancies</label>
         <input type="number" name="vacancy" id="vacancy" class="form-control" required>
       </div>
-
       <div class="form-group mb-3">
         <label for="logo">Upload Company Logo</label>
         <input type="file" name="logo" id="logo" class="form-control">
       </div>
-
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Post Job</button>
         <a href="{% url 'Home:job_page' %}" class="btn btn-secondary">Cancel</a>
@@ -96,11 +87,16 @@
     </form>
   </div>
 </div>
+
+<!-- My Posted Jobs Section -->
+<h4 class="mt-5 mb-4">🧾 My Posted Jobs</h4>
 <div class="row g-4">
   {% for job in jobs %}
   <div class="col-md-6 col-lg-4">
     <div class="card shadow-sm h-100 border-0">
+      {% if job.logo %}
       <img src="{{ job.logo.url }}" class="card-img-top" alt="{{ job.title }}" style="height: 180px; object-fit: contain;">
+      {% endif %}
       <div class="card-body">
         <h5 class="card-title">{{ job.title }}</h5>
         <p class="card-text"><i class="fas fa-map-marker-alt text-success me-1"></i> {{ job.location }}</p>
@@ -109,7 +105,7 @@
         <p class="card-text text-muted" style="font-size: 0.9rem;">Vacancies: {{ job.vacancy }}</p>
       </div>
       <div class="card-footer bg-transparent d-flex justify-content-between">
-        <a href="{% url 'Home:job_details' job.slug %}" class="btn btn-outline-primary btn-sm">View</a>
+        <a href="{% url 'Home:job_slug' job.slug %}" class="btn btn-outline-primary btn-sm">View</a>
         <a href="#" class="btn btn-outline-danger btn-sm">Delete</a>
       </div>
     </div>
@@ -120,7 +116,6 @@
     </div>
   {% endfor %}
 </div>
-<div>
 
 
 <script>
@@ -132,7 +127,6 @@
     document.getElementById('jobPopup').style.display = 'none';
   }
 
-  // Close when clicking outside the form
   window.onclick = function(event) {
     const popup = document.getElementById('jobPopup');
     if (event.target === popup) {
