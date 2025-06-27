@@ -1,70 +1,174 @@
 {% extends 'admin_base.html' %}
-
 {% load static %}
 {% block title %}Candidate Details{% endblock %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/candidate.css' %}">
+  <style>
+    .tab-bar {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 15px;
+      border-bottom: 2px solid transparent;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .tab.active {
+      border-bottom: 2px solid #278c5c;
+      color: #278c5c;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active-tab {
+      display: block;
+    }
+  </style>
 {% endblock %}
+
 {% block content %}
-  <div class="candidate-details-layout">
-    <!-- Left Info Panel -->
-    <div class="candidate-profile-box">
-      <img src="{{candidate.image.url}}" class="candidate-photo" alt="User Photo">
-      <h3>{{ candidate.name }}</h3>
-      <p class="score">{{ candidate.evaluation_point }}/10<br><span>Score</span></p>
+<div class="candidate-details-layout">
+  <!-- Left Info Panel -->
+  <div class="candidate-profile-box">
+    <img src="{{ candidate.image.url }}" class="candidate-photo" alt="User Photo">
+    <h3>{{ candidate.name }}</h3>
+    <p class="score">{{ candidate.evaluation_point }}/10<br><span>Score</span></p>
 
-      <label for="eval">Select Evaluation:</label>
-      <select id="eval">
-        <option>Evaluation (2024-05-20)</option>
-      </select>
+    <label for="eval">Select Evaluation:</label>
+    <select id="eval">
+      <option>Evaluation (2024-05-20)</option>
+    </select>
 
-      <div class="profile-info">
-        <p><strong>Last Interview Duration:</strong> N/A</p>
-        <p><strong>Detailed Feedback:</strong><br>Solid performance, could improve on specific technical areas but has great potential.</p>
-      </div>
-
-      <div class="job-details">
-        <p><strong>Field:</strong> {{ candidate.fields }}</p>
-        <p><strong>Phone:</strong> {{ candidate.phone }}</p>
-        <p><strong>Email:</strong> {{ candidate.mail }}</p>
-      </div>
-
-      <button class="edit-btn">Edit Contact</button>
+    <div class="profile-info">
+      <p><strong>Last Interview Duration:</strong> N/A</p>
+      <p><strong>Detailed Feedback:</strong><br>
+        Solid performance, could improve on specific technical areas but has great potential.
+      </p>
     </div>
 
-    <!-- Right Side Content -->
-    <div class="candidate-details-content">
-      <!-- Tab bar -->
-      <div class="tab-bar">
-        <a class="tab active" href="#">Candidate Details</a>
-        <a class="tab" href="#">Interview Evaluation</a>
-        <a class="tab" href="#">Chat History</a>
-      </div>
+    <div class="job-details">
+      <p><strong>Field:</strong> {{ candidate.fields }}</p>
+      <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+      <p><strong>Email:</strong> {{ candidate.mail }}</p>
+    </div>
 
-      <!-- Basic Info Box -->
+    <button class="edit-btn">Edit Contact</button>
+  </div>
+
+  <!-- Right Side Content -->
+  <div class="candidate-details-content">
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <a class="tab active" onclick="switchTab(event, 'details')">Candidate Details</a>
+      <a class="tab" onclick="switchTab(event, 'evaluation')">Interview Evaluation</a>
+      <a class="tab" onclick="switchTab(event, 'chat')">Chat History</a>
+    </div>
+
+    <!-- Tab: Candidate Details -->
+    <div id="details" class="tab-content active-tab">
       <div class="info-box">
         <h4>Basic Information</h4>
         <div class="info-grid">
-          <p><strong>Email:</strong> {{candidate.name }}</p>
-          <p><strong>Phone:</strong> {{candidate.phone }}</p>
-          <p><strong>Field:</strong> {{candidate.fields }}</p>
-          <p><strong>Current Status:</strong> <span class="status-badge">{{candidate.status}}</span></p>
+          <p><strong>Email:</strong> {{ candidate.name }}</p>
+          <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+          <p><strong>Field:</strong> {{ candidate.fields }}</p>
+          <p><strong>Current Status:</strong> <span class="status-badge">{{ candidate.status }}</span></p>
         </div>
       </div>
 
-      <!-- Resume Box -->
       <div class="info-box">
-          <h3>Resume</h3>
-          {% if candidate.cv %}
-              <div class="cv-file">
-              <a href="{{ candidate.cv.url }}" target="_blank">{{ candidate.cv.name|cut:"cv/" }}</a>
+        <h3>Resume</h3>
+        {% if candidate.cv %}
+        <div class="cv-file">
+          <a href="{{ candidate.cv.url }}" target="_blank">{{ candidate.cv.name|cut:"cv/" }}</a>
+        </div>
+        {% else %}
+        <p class="no-cv">No CV available.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tab: Interview Evaluation -->
+    <div id="evaluation" class="tab-content">
+      <div style="background-color: #04630E; border-radius: 16px; padding: 30px; width: 170%; color: white;">
+        <h5 class="mb-4">Interview Evaluations</h5>
+        <p class="mb-4">Evaluation (2024-05-20)</p>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div style="background-color: #278c5c; padding: 20px; border-radius: 10px;">
+              <p class="mb-1">Technical:</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fs-5 fw-bold">7/10</span>
+                <a href="#" class="text-info small">Details</a>
               </div>
-          {% else %}
-              <p class="no-cv">No CV available.</p>
-          {% endif %}
+            </div>
           </div>
+          <div class="col-md-4">
+            <div style="background-color:#278c5c; padding: 20px; border-radius: 10px;">
+              <p class="mb-1">Soft Skills:</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fs-5 fw-bold">8/10</span>
+                <a href="#" class="text-info small">Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div style="background-color:#278c5c; padding: 20px; border-radius: 10px;">
+              <p class="mb-1">Personal:</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fs-5 fw-bold">7/10</span>
+                <a href="#" class="text-info small">Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div style="background-color: #278c5c; padding: 20px; border-radius: 10px;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1">Camera Evaluation:</p>
+                <span class="fs-5 fw-bold">70/100</span>
+              </div>
+              <a href="#" class="text-info small">Details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <a href="#" class="btn btn-primary px-4" style="background-color: #278c5c; border-color: #278c5c;">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Chat History -->
+    <div id="chat" class="tab-content">
+      <div class="info-box">
+        <h4>Chat History</h4>
+        <p>Coming soon: Chat transcript between candidate and assistant.</p>
       </div>
     </div>
   </div>
+</div>
+
+<!-- JS for switching tabs -->
+<script>
+  function switchTab(event, tabId) {
+    event.preventDefault();
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => tab.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('active-tab'));
+
+    event.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active-tab');
+  }
+</script>
 {% endblock %}

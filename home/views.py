@@ -54,3 +54,4 @@ def job_details(request, job_slug):
         'error_message': error_message
     }
     return render(request, 'jobs/job_details.html', context)
+
