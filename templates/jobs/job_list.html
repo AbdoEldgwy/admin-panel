@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+        <!-- Jobs Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Job Listing</h1>
+                <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
+                    <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+                        <li class="nav-item">
+                            <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
+                                <h6 class="mt-n1 mb-0">Featured</h6>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="pill" href="#tab-2">
+                                <h6 class="mt-n1 mb-0">Full Time</h6>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="d-flex align-items-center text-start mx-3 me-0 pb-3" data-bs-toggle="pill" href="#tab-3">
+                                <h6 class="mt-n1 mb-0">Part Time</h6>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane fade show p-0 active">
+                            {% for job in jobs %}
+                            <div class="job-item p-4 mb-4">
+                                <div class="row g-4">
+                                    <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                        <img class="flex-shrink-0 img-fluid border rounded" src="{{job.logo.url}}" alt="" style="width: 80px; height: 80px;">
+                                        <div class="text-start ps-4">
+                                            <h5 class="mb-3">{{job.title}}</h5>
+                                            <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{job.location}}</span>
+                                            <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{job.type_job}}</span>
+                                            <span class="text-truncate me-3"><i class="fas fa-user-tie text-primary me-2"></i>{{job.level}} Level</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                        <div class="d-flex mb-3">
+                                            <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            <a class="btn btn-primary" href="{% url 'Home:job_slug' job.slug %}">Apply Now</a>
+                                        </div>
+                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: {{job.created_at|date:"Y-m-d"}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% if jobs.has_other_pages %}
+                            <div class="col-12">
+                                <nav>
+                                  <ul class="pagination justify-content-center">
+                                    {% if jobs.has_previous %}
+                                    <li class="page-item disabled"><a class="page-link" href="?page={{jobs.previous_page_number}}">Previous</span></a></li>
+                                    {% endif %}
+                                    {% for i in jobs.paginator.page_range %}
+                                    <li class="page-item active"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                                    {% endfor %}
+                                    {% if jobs.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{jobs.next_page_number}}">Next</a></li>
+                                    {% endif %}
+                                  </ul>
+                                </nav>
+                            </div>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Jobs End -->
+{% endblock body %}

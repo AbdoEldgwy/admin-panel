@@ -24,8 +24,10 @@ urlpatterns = [
     path('admin_dashboard/questions/',include('questions.urls',namespace='Questions')),
     path('accounts/',include('accounts.urls',namespace='accounts')),
     path('admin_dashboard/interview_scheduling/',include('interview_scheduling.urls',namespace='InterviewScheduling')),
+    path('admin_dashboard/jobs/', include('Job.urls', namespace='Jobs')),
     path('admin/', admin.site.urls),
     path('',include('home.urls',namespace='Home')),
+    path("api-auth/", include("rest_framework.urls")),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

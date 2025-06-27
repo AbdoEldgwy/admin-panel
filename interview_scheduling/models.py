@@ -3,6 +3,7 @@ from django.db import models
 from Job.models import Job
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from admin_dashboard.models import Dashboard
 
 
 class InterviewSession(models.Model):
@@ -23,3 +24,13 @@ class InterviewSession(models.Model):
 
     def __str__(self):
         return f"{self.job.title} - {self.status}"
+
+
+class Interview_data(models.Model):
+    interview_session = models.ForeignKey(InterviewSession, on_delete=models.CASCADE)
+    candidate_info = models.ForeignKey(Dashboard, on_delete=models.CASCADE)
+    duration_consumed = models.PositiveIntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.interview_session.job.title} - {self.candidate_info.name}"

@@ -38,7 +38,6 @@ def dashboard(request):
     return render(request, 'admin/admin_dashboard.html', context)
 
 @login_required
-@login_required
 def candidate(request):
     dashboard = Dashboard.objects.filter(created_by=request.user)
 

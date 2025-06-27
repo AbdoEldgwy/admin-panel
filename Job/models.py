@@ -12,16 +12,25 @@ LEVEL_CHOICES = [
     ('Mid', 'Mid Level'),
     ('Advanced', 'Advanced'),
 ]
+
+job_type=(
+    ('Full Time','Full Time'),
+    ('Part Time','Part Time')
+)
+
 class Job(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    description = models.TextField()
-    requirements = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    location = models.CharField(max_length=100)
     logo = models.ImageField(upload_to=job_logo, null=True, blank=True)
+    location = models.CharField(max_length=100)
+    vacancy=models.IntegerField(default=0)
+    type_job=models.CharField(max_length=200,choices=job_type)
     level = models.CharField(max_length=100,choices=LEVEL_CHOICES)
+    description = models.TextField()
+    qualifications = models.TextField()
     slug = models.SlugField(unique=True, blank=True, null=True)
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
