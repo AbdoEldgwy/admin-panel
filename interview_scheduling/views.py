@@ -8,6 +8,7 @@ from admin_dashboard.models import Dashboard
 import random
 from django.core.mail import EmailMessage
 from django.utils.html import format_html
+from django.http import JsonResponse
 
 @login_required
 def interview_scheduling_view(request):
@@ -87,3 +88,18 @@ def send_email_for_candidate(candidates):
         )
         email.content_subtype = "html"  # Mark the content as HTML
         email.send(fail_silently=False)
+        
+
+def interview_data_api(request, session_slug):
+    dashboard_obj = get_object_or_404(Dashboard, session_slug=session_slug)
+    question_queryset = get_object_or_404(InterviewSession, created_by=dashboard_obj.created_by, job=dashboard_obj.fields)
+
+    return JsonResponse({
+        "id": dashboard_obj.id,
+        "name": dashboard_obj.name,
+        "email": dashboard_obj.mail,
+        "evaluation_score": dashboard_obj.evaluation_point,
+        "status": dashboard_obj.status,
+        "Technical": question_queryset.question_querey,
+        "cv": dashboard_obj.cv_extractedText,
+    })

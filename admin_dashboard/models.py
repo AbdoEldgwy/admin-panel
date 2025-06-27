@@ -5,7 +5,8 @@ import datetime
 from Job.models import Job
 import random
 import string
-
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
 
 def image_upload(instance, filename):
     extension = filename.split('.')[-1]
@@ -37,6 +38,7 @@ class Dashboard(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     evaluation_dec_json = models.JSONField(default=dict, blank=True, null=True)
     session_slug = models.SlugField(max_length=100, unique=True, blank=True, null=True)
+    cv_extractedText = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -45,6 +47,13 @@ class Dashboard(models.Model):
             self.session_slug = slugify(f"{rand_str(10)}")
         super(Dashboard, self).save(*args, **kwargs)
 
+        if not self.cv_extractedText and self.cv:
+            try:
+                extracted_text = extract_text_from_pdf(self.cv.path)
+                self.cv_extractedText = extracted_text
+                super(Dashboard, self).save(update_fields=["cv_extractedText"])
+            except Exception as e:
+                self.cv_extractedText = f"ERROR: {str(e)}"
 
     class Meta:
         verbose_name = "Dashboard"
@@ -54,7 +63,34 @@ class Dashboard(models.Model):
         return self.name
 
 
+
+# @receiver(post_save, sender=Dashboard)
+# def extract_cv_text(sender, instance, created, **kwargs):
+#     if created and instance.cv:
+#         try:
+#             text = extract_text_from_pdf(instance.cv.path)
+#             instance.cv_extractedText = text
+#             instance.save(update_fields=['cv_extractedText'])
+#         except Exception as e:
+#             print(f"PDF extraction failed: {e}")
+
 def rand_str(length):
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for _ in range(length))
     return result_str
+
+
+import fitz
+def extract_text_from_pdf(file_path):
+    try:
+        text = ""
+        with fitz.open(file_path) as doc:
+            for page in doc:
+                text += page.get_text()
+        return text.strip()
+    except Exception as e:
+        return f"ERROR: {str(e)}"
+
+def chunk_list(lst, chunk_size):
+    for i in range(0, len(lst), chunk_size):
+        yield lst[i:i + chunk_size]
