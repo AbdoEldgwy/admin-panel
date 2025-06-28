@@ -27,6 +27,7 @@ def interview_scheduling_view(request):
         duration_minutes = int(request.POST.get('duration_minutes'))
         status = request.POST.get('status')
         selected_fields = request.POST.getlist('selected_fields')
+        question_quantity = int(request.POST.get('question_quantity'))
 
         if not all([job_id, scheduled_at, ended_at, status, selected_fields, duration_minutes]):
             messages.error(request, "❌ Please fill in all required fields.")
@@ -37,17 +38,33 @@ def interview_scheduling_view(request):
             })
 
         job = get_object_or_404(Job, id=job_id)
+        level_difficult = job.level
         field_ids = [int(fid) for fid in selected_fields]
 
-        technical_questions = list(Question.objects.filter(field__id__in=field_ids, field__field_type='Techincal'))
-        soft_questions = list(Question.objects.filter(field__id__in=field_ids, field__field_type='Soft Skill'))
+        technical_questions = list(
+            Question.objects.filter(
+                field__id__in=field_ids,
+                field__field_type='Techincal',
+                level=level_difficult  # filtered by job's level
+            )
+        )
+        soft_questions = list(
+            Question.objects.filter(
+                field__id__in=field_ids,
+                field__field_type='Soft Skill',
+                level=level_difficult  # filtered by job's level
+            )
+        )
 
         def balance_questions(q_list, count):
             random.shuffle(q_list)
             return q_list[:count]
+        
+        half_count = question_quantity // 2
+        remaining = question_quantity - half_count  # to handle odd numbers
 
-        technical = balance_questions(technical_questions, min(3, len(technical_questions)))
-        soft = balance_questions(soft_questions, min(3, len(soft_questions)))
+        technical = balance_questions(technical_questions, min(half_count, len(technical_questions)))
+        soft = balance_questions(soft_questions, min(remaining, len(soft_questions)))
 
         question_query = {
             "technical": [{"id": q.id, "Skill": q.field.name, "question": q.question_text} for q in technical],
@@ -61,6 +78,7 @@ def interview_scheduling_view(request):
             status=status,
             created_by=request.user,
             question_querey=question_query,
+            question_quantity = question_quantity,
             duration_minutes=duration_minutes
         )
 

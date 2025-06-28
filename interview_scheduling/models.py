@@ -19,6 +19,7 @@ class InterviewSession(models.Model):
     scheduled_at = models.DateTimeField(default=datetime.now)
     ended_at = models.DateTimeField(null=False)
     question_querey = models.JSONField(default=dict, blank=True, null=True)
+    question_quantity = models.PositiveIntegerField(default=3)
     selected_fields = models.ManyToManyField(Field) 
 
     def save(self, *args, **kwargs):
