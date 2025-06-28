@@ -1,4 +1,3 @@
-
 import requests
 def fetch_interview_data(session_slug):
     url = f"http://localhost:8000/admin_dashboard/interview_scheduling/api/interview/{session_slug}/"

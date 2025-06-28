@@ -5,85 +5,134 @@
 
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/question.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2>Schedule Interviews</h2>
-      <p class="text-muted">Create and manage interview sessions</p>
-    </div>
-    <button class="btn btn-success" onclick="openSessionPopup()">+ Create Session</button>
+<div class="question-header">
+  <div>
+    <div class="question-title">Interview Scheduling</div>
+    <div class="question-subtitle">Create and manage interview sessions</div>
   </div>
-
-  <!-- Messages -->
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
-
-  <!-- Existing Sessions -->
-  <div class="row">
-    {% for session in sessions %}
-    <div class="col-md-6 mb-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">{{ session.job.title }}</h5>
-          <p>Status: <strong>{{ session.status }}</strong></p>
-          <p>Scheduled: {{ session.scheduled_at|date:"Y-m-d H:i" }}</p>
-          <p>Ends at: {{ session.ended_at|date:"Y-m-d H:i" }}</p>
-          <a href="{% url 'InterviewScheduling:start_session' session.id %}" class="btn btn-sm btn-outline-primary">Start Now</a>
-          <a href="{% url 'InterviewScheduling:delete_session' session.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-        </div>
-      </div>
-    </div>
-    {% empty %}
-    <p class="text-muted">No interview sessions scheduled yet.</p>
-    {% endfor %}
+  <div class="header-buttons mb-4 text-end">
+      <button class="create-btn" onclick="openSessionPopup()">+ Create Interview Session</button>
   </div>
 </div>
 
-<!-- Popup Form -->
-<div class="modal fade" id="sessionModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="post">
-        {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-title">Create Interview Session</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          {{ form.as_p }}
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </form>
+<!-- Messages -->
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Interview Session Popup -->
+<div class="popup-overlay" id="sessionPopup" style="display: none;">
+  <div class="popup-content">
+    <div class="popup-header d-flex justify-content-between align-items-center">
+      <h3>New Interview Session</h3>
+      <button type="button" class="btn-close" aria-label="Close" onclick="closeSessionPopup()"></button>
     </div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <label for="job">Job Title</label>
+        <select name="job" id="job" class="form-control" required>
+          {% for job in jobs %}
+            <option value="{{ job.id }}">{{ job.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="scheduled_at">Scheduled At</label>
+        <input type="datetime-local" name="scheduled_at" id="scheduled_at" class="form-control" required>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="ended_at">Ends At</label>
+        <input type="datetime-local" name="ended_at" id="ended_at" class="form-control" required>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="status">Status</label>
+        <select name="status" id="status" class="form-control" required>
+          <option value="Open">Open</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="duration">Duration (minutes)</label>
+        <input type="number" name="duration_minutes" id="duration" class="form-control" min="1" required>
+      </div>
+      
+      <div class="form-group mb-3">
+        <label for="selected_fields">Select Fields</label>
+        <select name="selected_fields" id="selected_fields" class="form-control" multiple required>
+          {% for field in all_fields %}
+            <option value="{{ field.id }}">{{ field.name }} ({{ field.field_type }})</option>
+          {% endfor %}
+        </select>
+        <small class="text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple fields.</small>
+      </div>
+
+      <div class="form-actions mt-3">
+        <button type="submit" class="btn btn-primary">Create Session</button>
+        <button type="button" class="btn btn-secondary" onclick="closeSessionPopup()">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>
 
-<!-- jQuery (if needed) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Sessions List -->
+<h4 class="mt-5 mb-4">📅 My Interview Sessions</h4>
+<div class="row g-4">
+  {% for session in sessions %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-sm h-100 border-0">
+      <div class="card-body">
+        <h5 class="card-title">{{ session.job.title }}</h5>
+        <p class="card-text"><i class="fas fa-calendar text-success me-1"></i> {{ session.scheduled_at|date:"Y-m-d H:i" }}</p>
+        <p class="card-text"><i class="fas fa-hourglass-end text-warning me-1"></i> Ends at {{ session.ended_at|date:"Y-m-d H:i" }}</p>
+        <p class="card-text"><i class="fas fa-info-circle text-primary me-1"></i> Status: <strong>{{ session.status }}</strong></p>
+      </div>
+      <div class="card-footer bg-transparent d-flex justify-content-between">
+        <a href="{% url 'InterviewScheduling:start_session' session.id %}" class="btn btn-outline-primary btn-sm">Start</a>
+        <a href="{% url 'InterviewScheduling:delete_session' session.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info text-center">No interview sessions scheduled yet.</div>
+  </div>
+  {% endfor %}
+</div>
 
-<!-- ✅ Bootstrap Bundle with Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Font Awesome (if used) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-
+<!-- JavaScript -->
 <script>
   function openSessionPopup() {
-    var myModal = new bootstrap.Modal(document.getElementById('sessionModal'), {});
-    myModal.show();
+    document.getElementById('sessionPopup').style.display = 'flex';
+  }
+
+  function closeSessionPopup() {
+    document.getElementById('sessionPopup').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    const popup = document.getElementById('sessionPopup');
+    if (event.target === popup) {
+      closeSessionPopup();
+    }
   }
 </script>
+
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

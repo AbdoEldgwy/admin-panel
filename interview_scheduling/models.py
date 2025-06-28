@@ -4,6 +4,9 @@ from Job.models import Job
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from admin_dashboard.models import Dashboard
+from questions.models import Field  
+from django.core.exceptions import ValidationError
+from django.utils.timezone import now, is_naive, make_aware
 
 
 class InterviewSession(models.Model):
@@ -16,6 +19,7 @@ class InterviewSession(models.Model):
     scheduled_at = models.DateTimeField(default=datetime.now)
     ended_at = models.DateTimeField(null=False)
     question_querey = models.JSONField(default=dict, blank=True, null=True)
+    selected_fields = models.ManyToManyField(Field) 
 
     def save(self, *args, **kwargs):
         if not self.slug and self.scheduled_at:
@@ -25,6 +29,19 @@ class InterviewSession(models.Model):
     def __str__(self):
         return f"{self.job.title} - {self.status}"
 
+    def clean(self):
+        current_time = now()
+        if is_naive(self.scheduled_at):
+            self.scheduled_at = make_aware(self.scheduled_at)
+
+        if is_naive(self.ended_at):
+            self.ended_at = make_aware(self.ended_at)
+
+        if self.scheduled_at < current_time:
+            raise ValidationError("Scheduled date must be in the future.")
+
+        if self.ended_at <= self.scheduled_at:
+            raise ValidationError("End date must be after scheduled date.")
 
 class Interview_data(models.Model):
     interview_session = models.ForeignKey(InterviewSession, on_delete=models.CASCADE)

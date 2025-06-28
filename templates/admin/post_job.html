@@ -31,6 +31,18 @@
 </div>
 {% endif %}
 
+{% if messages %}
+  <div class="mt-2">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
 <!-- Job Post Form Popup -->
 <div class="popup-overlay" id="jobPopup" style="display: none;">
   <div class="popup-content">
@@ -82,7 +94,7 @@
       </div>
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Post Job</button>
-        <a href="{% url 'Home:job_page' %}" class="btn btn-secondary">Cancel</a>
+        <button type="button" class="btn btn-secondary" onclick="closeJobPopup()">Cancel</button>
       </div>
     </form>
   </div>

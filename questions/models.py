@@ -12,6 +12,7 @@ class Field(models.Model):
     field_type = models.CharField(max_length=50, choices=typeChoices, default='Techincal')
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
